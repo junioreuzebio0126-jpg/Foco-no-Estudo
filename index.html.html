@@ -273,6 +273,135 @@
         </div>
     </div>
 
+    <!-- MAIN SUBJECT DETAIL MODAL (MISSING - RESTORED) -->
+    <div id="modal-overlay" class="fixed inset-0 bg-gray-900/40 dark:bg-black/60 hidden z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-300" onclick="closeModal(event)">
+        <div id="modal-content" class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-4xl w-full h-[85vh] transform scale-95 opacity-0 transition-all duration-300 flex flex-col relative overflow-hidden">
+            <!-- Header -->
+            <div class="bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 px-8 py-6 flex justify-between items-start shrink-0">
+                <div class="flex items-start gap-4">
+                    <div id="modal-icon-container" class="w-12 h-12 rounded-lg flex items-center justify-center shrink-0">
+                        <!-- Icon injected via JS -->
+                    </div>
+                    <div>
+                        <h3 id="modal-title" class="text-2xl font-bold text-gray-800 dark:text-white leading-tight">Título da Matéria</h3>
+                        <p id="modal-desc" class="text-sm text-gray-500 dark:text-slate-400 mt-1">Descrição detalhada da matéria.</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="requestResetSubject()" class="text-gray-400 hover:text-orange-500 p-2 rounded-full hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors" title="Zerar Progresso">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    </button>
+                    <button onclick="requestDeleteSubject()" class="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Excluir Pasta">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row h-full overflow-hidden bg-gray-50 dark:bg-slate-900/50">
+                <!-- Left Column: Controls & Stats -->
+                <div class="w-full md:w-1/3 border-r border-gray-200 dark:border-slate-700 p-6 overflow-y-auto bg-white dark:bg-slate-800">
+                    
+                    <!-- Progress Card -->
+                    <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-4 border border-gray-100 dark:border-slate-700 mb-6">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Meta Diária</span>
+                            <span id="subject-progress-text" class="text-sm font-bold text-tecBlue dark:text-blue-400">0/20 (0%)</span>
+                        </div>
+                        <div class="h-2 w-full bg-gray-200 dark:bg-slate-600 rounded-full overflow-hidden mb-2">
+                            <div id="subject-progress-bar" class="h-full bg-tecBlue dark:bg-blue-500 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <p class="text-right"><span id="subject-remaining-text" class="text-xs text-gray-400">Faltam 20</span></p>
+                        
+                        <div class="mt-3 pt-3 border-t border-gray-200 dark:border-slate-600 flex items-center gap-2">
+                            <label class="text-xs text-gray-500 dark:text-slate-400">Meta:</label>
+                            <input type="number" id="input-subject-goal" class="w-16 border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded px-1 text-xs text-center" onchange="updateSubjectGoal()">
+                        </div>
+                    </div>
+
+                    <!-- Add Progress Form -->
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-tecBlue dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            Registrar Estudo
+                        </h4>
+                        <div class="space-y-3">
+                            <select id="input-progress-subtopic" class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-tecBlue outline-none">
+                                <option value="">Geral (Sem subtópico)</option>
+                            </select>
+                            <div class="flex gap-2">
+                                <div class="flex-1">
+                                    <input type="number" id="input-subject-done" class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-tecBlue outline-none" placeholder="Feitas">
+                                </div>
+                                <div class="flex-1">
+                                    <input type="number" id="input-subject-correct" class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-tecGreen outline-none" placeholder="Acertos">
+                                </div>
+                            </div>
+                            <button onclick="addSubjectProgress()" class="w-full bg-tecBlue dark:bg-blue-600 hover:bg-tecBlueDark dark:hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">Adicionar</button>
+                        </div>
+                    </div>
+
+                    <!-- Subtopics List -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-sm font-bold text-gray-800 dark:text-white">Subtópicos</h4>
+                            <button onclick="openAddSubtopicModal()" class="text-xs text-tecBlue dark:text-blue-400 hover:underline">+ Novo</button>
+                        </div>
+                        <div id="subtopics-list" class="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: AI & Analysis -->
+                <div class="w-full md:w-2/3 p-6 overflow-y-auto">
+                    <!-- AI Generator -->
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5 shadow-sm mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                <span class="text-geminiPurple"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg></span>
+                                Simulador AI
+                            </h4>
+                            <span class="text-[10px] bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full font-medium">Experimental</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-slate-400 mb-4">Gere uma questão inédita e difícil sobre esta matéria para testar seus conhecimentos.</p>
+                        
+                        <button id="btn-generate-ai" onclick="generateAIQuestion()" class="w-full bg-gradient-to-r from-geminiPurple to-purple-600 hover:from-purple-700 hover:to-purple-800 text-white py-2.5 rounded-lg font-medium shadow-md transition-all flex items-center justify-center gap-2">
+                            <span id="btn-loading-ai" class="hidden"><svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></span>
+                            <span id="btn-text-ai">Gerar Questão Desafio</span>
+                        </button>
+
+                        <div id="ai-section" class="mt-6 border-t border-gray-100 dark:border-slate-700 pt-4 hidden">
+                            <div class="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-4 border border-gray-200 dark:border-slate-600">
+                                <div id="ai-content" class="ai-response text-gray-700 dark:text-slate-300 text-sm space-y-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weakness Analysis -->
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5 shadow-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                <span class="text-amber-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg></span>
+                                Análise de Pontos Fracos
+                            </h4>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-slate-400 mb-4">A IA analisará seus subtópicos para identificar onde você precisa focar.</p>
+                        
+                        <button id="btn-analyze-weakness" onclick="analyzeSubjectWeaknesses()" class="w-full border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                             <span id="loading-weakness" class="hidden"><svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></span>
+                             Analisar Agora
+                        </button>
+                        
+                        <div id="weakness-result" class="mt-4 text-sm text-gray-700 dark:text-slate-300 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800/30 p-4 rounded-lg hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden Modals (Add Subject, Subtopic, Confirm) -->
     <div id="add-subject-modal-overlay" class="fixed inset-0 bg-gray-900/40 dark:bg-black/60 hidden z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-300" onclick="closeAddSubjectModal(event)"><div id="add-subject-modal-content" class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full transform scale-95 opacity-0 transition-all duration-300 p-0 relative overflow-hidden"><div class="bg-tecBg dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-800 dark:text-white">Nova Matéria</h3><button onclick="closeAddSubjectModal()" class="text-gray-400 hover:text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div><div class="p-6"><div class="mb-4"><label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Nome da Matéria</label><input type="text" id="new-subject-name" class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tecBlue" placeholder="Ex: Direito Administrativo"></div><div class="mb-6"><label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Descrição Curta</label><input type="text" id="new-subject-desc" class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tecBlue" placeholder="Ex: Atos Administrativos e Poderes"></div><div class="flex justify-end gap-3"><button onclick="closeAddSubjectModal()" class="px-4 py-2 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded">Cancelar</button><button onclick="saveNewSubject()" class="px-4 py-2 bg-tecBlue text-white hover:bg-tecBlueDark rounded font-medium">Criar Pasta</button></div></div></div></div>
     <div id="add-subtopic-modal-overlay" class="fixed inset-0 bg-gray-900/40 dark:bg-black/60 hidden z-[55] flex items-center justify-center p-4 opacity-0 transition-opacity duration-300" onclick="closeAddSubtopicModal(event)"><div id="add-subtopic-modal-content" class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full transform scale-95 opacity-0 transition-all duration-300 p-0 relative overflow-hidden"><div class="bg-tecBg dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-800 dark:text-white">Novo Subtópico</h3><button onclick="closeAddSubtopicModal()" class="text-gray-400 hover:text-gray-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div><div class="p-6"><div class="mb-4"><label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Nome do Subtópico</label><input type="text" id="new-subtopic-name" class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tecBlue" placeholder="Ex: Crase, Verbos, Atos..."></div><div class="flex justify-end gap-3"><button onclick="closeAddSubtopicModal()" class="px-4 py-2 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded">Cancelar</button><button onclick="saveNewSubtopic()" class="px-4 py-2 bg-tecBlue text-white hover:bg-tecBlueDark rounded font-medium">Adicionar</button></div></div></div></div>
@@ -659,7 +788,7 @@
             });
         }
 
-        // --- ALL PREVIOUS MODAL/LOGIC FUNCTIONS KEPT EXACTLY SAME ---
+        // --- MODAL FUNCTIONS (One-Liners kept + requestDeleteSubject Fixed) ---
         function deleteFolderFromCard(event, id) { event.stopPropagation(); currentSubjectId = id; requestDeleteSubject(); }
         function openAddSubjectModal() { document.getElementById('new-subject-name').value = ''; document.getElementById('new-subject-desc').value = ''; document.getElementById('add-subject-modal-overlay').classList.remove('hidden'); setTimeout(() => { document.getElementById('add-subject-modal-overlay').classList.remove('opacity-0'); document.getElementById('add-subject-modal-content').classList.remove('scale-95', 'opacity-0'); document.getElementById('add-subject-modal-content').classList.add('scale-100', 'opacity-100'); }, 10); }
         function closeAddSubjectModal(event) { if (event && event.target !== document.getElementById('add-subject-modal-overlay')) return; document.getElementById('add-subject-modal-overlay').classList.add('opacity-0'); document.getElementById('add-subject-modal-content').classList.remove('scale-100', 'opacity-100'); document.getElementById('add-subject-modal-content').classList.add('scale-95', 'opacity-0'); setTimeout(() => { document.getElementById('add-subject-modal-overlay').classList.add('hidden'); }, 300); }
@@ -716,7 +845,35 @@
         function closeConfirmModal(event) { if (event && event.target !== document.getElementById('confirm-modal-overlay') && event.target.id !== 'confirm-modal-btn' && !event.target.closest('button')) return; if(event && event.target.id === 'confirm-modal-btn' && pendingAction) pendingAction(); const overlay = document.getElementById('confirm-modal-overlay'); overlay.classList.add('opacity-0'); document.getElementById('confirm-modal-content').classList.remove('scale-100', 'opacity-100'); document.getElementById('confirm-modal-content').classList.add('scale-95', 'opacity-0'); setTimeout(() => { overlay.classList.add('hidden'); pendingAction = null; }, 300); }
         document.getElementById('confirm-modal-btn').onclick = (e) => closeConfirmModal(e);
         function requestResetSubject() { if(!currentSubjectId) return; openConfirmModal('Tem a certeza? Isso limpa todo o progresso.', () => { const sub = subjects.find(s => s.id === currentSubjectId); if(sub) { sub.totalQuestions = 0; sub.correctCount = 0; sub.goal = 20; sub.progress = 0; if(sub.subtopics) sub.subtopics.forEach(st => { st.totalQuestions = 0; st.correctCount = 0; }); document.getElementById('input-subject-goal').value = '20'; document.getElementById('input-subject-done').value = ''; document.getElementById('input-subject-correct').value = ''; updateModalProgressUI(sub); renderSubtopics(sub); renderGrid(); showToast('Pasta zerada!', 'success'); } }); }
-        function requestDeleteSubject() { if(!currentSubjectId) return; openConfirmModal('Excluir esta pasta permanentemente?', () => { const index = subjects.findIndex(s => s.id === currentSubjectId); if(index > -1) { subjects.splice(index, 1); const overlay = document.getElementById('modal-overlay'); overlay.classList.add('opacity-0'); document.getElementById('modal-content').classList.remove('scale-100', 'opacity-100'); document.getElementById('modal-content').classList.add('scale-95', 'opacity-0'); setTimeout(() => { overlay.classList.add('hidden'); document.body.style.overflow = ''; }, 300); renderGrid(); showToast('Excluída.', 'success'); } }); }
+        
+        // --- FIXED FUNCTION ---
+        function requestDeleteSubject() { 
+            if(!currentSubjectId) return; 
+            openConfirmModal('Excluir esta pasta permanentemente?', () => { 
+                const index = subjects.findIndex(s => s.id === currentSubjectId); 
+                if(index > -1) { 
+                    subjects.splice(index, 1); 
+                    
+                    // CORREÇÃO: Verifica se o modal existe antes de tentar fechá-lo
+                    const overlay = document.getElementById('modal-overlay'); 
+                    if (overlay) {
+                        overlay.classList.add('opacity-0'); 
+                        const content = document.getElementById('modal-content');
+                        if (content) {
+                            content.classList.remove('scale-100', 'opacity-100'); 
+                            content.classList.add('scale-95', 'opacity-0'); 
+                        }
+                        setTimeout(() => { 
+                            overlay.classList.add('hidden'); 
+                            document.body.style.overflow = ''; 
+                        }, 300); 
+                    }
+                    
+                    renderGrid(); 
+                    showToast('Excluída.', 'success'); 
+                } 
+            }); 
+        }
 
         async function callGemini(prompt) { try { const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) }); if (!response.ok) throw new Error('Falha API'); const data = await response.json(); return data.candidates[0].content.parts[0].text; } catch (error) { console.error(error); return "Erro ao conectar com Mentor IA."; } }
         async function generateAIQuestion() { const sub = subjects.find(s => s.id === currentSubjectId); const topic = sub ? sub.title : "Concursos"; const btnText = document.getElementById('btn-text-ai'); const btnLoading = document.getElementById('btn-loading-ai'); const btn = document.getElementById('btn-generate-ai'); btnText.classList.add('invisible'); btnLoading.classList.remove('hidden'); btn.disabled = true; const prompt = `Crie uma questão de concurso inédita (Difícil) sobre: "${topic}". Formato HTML limpo: <p><strong>Enunciado:</strong> ...</p><ul><li>A) ...</li>...</ul><p><strong>Gabarito:</strong> ...</p>`; const text = await callGemini(prompt); document.getElementById('ai-content').innerHTML = text; document.getElementById('ai-section').classList.remove('hidden'); btnText.classList.remove('invisible'); btnLoading.classList.add('hidden'); btn.disabled = false; }
